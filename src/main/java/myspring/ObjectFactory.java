@@ -2,6 +2,7 @@ package myspring;
 
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.*;
