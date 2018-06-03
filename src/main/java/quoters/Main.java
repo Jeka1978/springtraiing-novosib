@@ -13,6 +13,7 @@ public class Main {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         Arrays.stream(context.getBeanDefinitionNames()).forEach(System.out::println);
         System.out.println("******************");
+        context.close();
 
     }
 }
