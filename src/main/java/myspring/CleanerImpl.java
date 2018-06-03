@@ -1,13 +1,10 @@
 package myspring;
 
-import org.fluttercode.datafactory.impl.DataFactory;
-
 import javax.annotation.PostConstruct;
 
 /**
  * @author Evgeny Borisov
  */
-@Benchmark
 public class CleanerImpl implements Cleaner {
 
     @InjectRandomName
