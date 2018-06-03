@@ -1,13 +1,20 @@
 package quoters;
 
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Evgeny Borisov
  */
+@Component
+@Book
 public class Shakespear implements Quoter {
-    @Setter
+    @Value("${shake}")
     private String message;
+
 
     @InjectRandomInt(min = 3, max = 6)
     private int repeat;
