@@ -2,17 +2,23 @@ package myspring;
 
 import org.fluttercode.datafactory.impl.DataFactory;
 
+import javax.annotation.PostConstruct;
+
 /**
  * @author Evgeny Borisov
  */
+@Benchmark
 public class CleanerImpl implements Cleaner {
 
     @InjectRandomName
     private String name;
 
+    @PostConstruct
+    public void init() {
+        System.out.println("name = " + name);
+    }
 
     public void clean() {
-        System.out.println(name+" was started");
         System.out.println("VVVVVVVVvvvvvvvvvvv");
     }
 }

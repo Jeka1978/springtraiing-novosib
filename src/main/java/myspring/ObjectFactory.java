@@ -1,14 +1,10 @@
 package myspring;
 
 import lombok.SneakyThrows;
-import lombok.experimental.Wither;
-import lombok.extern.slf4j.Slf4j;
-import org.fluttercode.datafactory.impl.DataFactory;
-import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import javax.annotation.PostConstruct;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,11 +33,36 @@ public class ObjectFactory {
     }
 
 
-    public <T> T createObject(Class<T> type) throws IllegalAccessException, InstantiationException {
+    @SneakyThrows
+    public <T> T createObject(Class<T> type) {
         type = resolveImpl(type);
         T t = type.newInstance();
         configure(t);
+        invokeInit(type, t);
+        if (type.isAnnotationPresent(Benchmark.class)) {
+            return (T) Proxy.newProxyInstance(type.getClassLoader(), type.getInterfaces(), new InvocationHandler() {
+                @Override
+                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    System.out.println("*******BENCHMARK START " + method.getName() + " ************");
+                    long start = System.nanoTime();
+                    Object retVal = method.invoke(t, args);
+                    long end = System.nanoTime();
+                    System.out.println(end-start);
+                    System.out.println("*******BENCHMARK END " + method.getName() + " ************");
+                    return retVal;
+                }
+            });
+        }
         return t;
+    }
+
+    private <T> void invokeInit(Class<T> type, T t) throws IllegalAccessException, InvocationTargetException {
+        Method[] methods = type.getMethods();
+        for (Method method : methods) {
+            if (method.isAnnotationPresent(PostConstruct.class)) {
+                method.invoke(t);
+            }
+        }
     }
 
 
