@@ -1,7 +1,9 @@
 package quoters.aop;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,8 +13,22 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class QuoterAspect {
 
-    @Before("execution(* quoters..*.say*(..))")
-    public void handleSayMethods(){
-        System.out.println("This is quote: ");
+    @Pointcut("execution(* quoters..*.say*(..))")
+    public void allSayMethods(){}
+
+    @Pointcut("@annotation(Deprecated)")
+    public void deprecatedMethods(){}
+
+
+    @Before("allSayMethods()")
+    public void handleSayMethods(JoinPoint jp){
+        System.out.println(jp.getThis().getClass());
+        System.out.println("This is quote of "+jp.getTarget().getClass().getSimpleName());
     }
 }
+
+
+
+
+
+
